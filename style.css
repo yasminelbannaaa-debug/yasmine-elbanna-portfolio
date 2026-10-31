@@ -1,0 +1,703 @@
+/* ==========================================================================
+   Yasmin — portfolio styles
+   Brand colours and fonts live in :root.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Andre JT";
+  src: url("../fonts/AndreJT-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Andre JT";
+  src: url("../fonts/AndreJT-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Brand colours */
+  --black: #0B0B0A;
+  --cream: #F4F2EB;
+  --yellow: #EFE054;
+  --lilac: #A694D3;
+
+  /* The same colours at lower opacity, for secondary text and lines */
+  --muted: rgba(244, 242, 235, 0.64);
+  --line: rgba(244, 242, 235, 0.16);
+  --ink-muted: rgba(11, 11, 10, 0.72);
+  --ink-line: rgba(11, 11, 10, 0.22);
+
+  --display: "Andre JT", "Instrument Sans", system-ui, sans-serif;
+  --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1440px;
+  --radius: 18px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+ul, ol { list-style: none; }
+::selection { background: var(--yellow); color: var(--black); }
+:focus-visible { outline: 2px solid var(--yellow); outline-offset: 3px; border-radius: 6px; }
+
+.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Hand-drawn blob backgrounds (drawn by site.js) */
+[data-blob] svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+[data-blob] path { fill: currentColor; }
+[data-color="yellow"] { --fill: var(--yellow); }
+[data-color="lilac"] { --fill: var(--lilac); }
+[data-color="cream"] { --fill: var(--cream); }
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  height: 52px; padding: 0 26px;
+  border: 2px solid var(--cream); border-radius: 999px;
+  font-family: var(--display); font-weight: 500; font-size: 18px; white-space: nowrap;
+  transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.4s var(--bounce);
+}
+.btn:hover { background: var(--cream); color: var(--black); transform: translateY(-2px) rotate(-1.5deg); }
+.btn-primary { background: var(--yellow); border-color: var(--yellow); color: var(--black); }
+.btn-primary:hover { background: var(--lilac); border-color: var(--lilac); }
+.btn-sm { height: 42px; padding: 0 20px; font-size: 16px; }
+.arrow { width: 18px; height: 18px; flex: none; transition: transform 0.3s var(--ease); }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* ---------- Nav ---------- */
+
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--black) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+.nav.scrolled { border-color: var(--line); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 24px; }
+.logo { font-family: var(--display); font-weight: 700; font-size: 32px; line-height: 1; transition: color 0.2s; }
+.logo:hover { color: var(--yellow); }
+.nav-links { display: flex; gap: 32px; font-size: 15px; }
+.nav-links a { position: relative; }
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; border-radius: 2px;
+  background: var(--yellow); transform: scaleX(0); transform-origin: right; transition: transform 0.35s var(--ease);
+}
+.nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+
+.menu-btn {
+  display: none; width: 42px; height: 42px; border-radius: 50%;
+  border: 2px solid var(--cream); background: none;
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+}
+.menu-btn span { width: 16px; height: 2px; border-radius: 2px; background: var(--cream); transition: transform 0.3s; }
+.nav.open .menu-btn span:first-child { transform: translateY(3.5px) rotate(45deg); }
+.nav.open .menu-btn span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+
+@media (max-width: 860px) {
+  .menu-btn { display: inline-flex; }
+  .nav-links {
+    display: none; position: absolute; top: 76px; left: 0; right: 0;
+    flex-direction: column; gap: 4px;
+    padding: 20px var(--gutter) 28px;
+    background: var(--black); border-bottom: 1px solid var(--line);
+    font-family: var(--display); font-weight: 700; font-size: 36px; line-height: 1.2;
+  }
+  .nav.open .nav-links { display: flex; }
+}
+
+/* ---------- Shared section bits ---------- */
+
+.section { padding-block: clamp(72px, 11vw, 150px); }
+.section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; flex-wrap: wrap; margin-bottom: clamp(36px, 5vw, 64px); }
+.kicker {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
+}
+.kicker::before { content: ""; width: 26px; height: 2px; border-radius: 2px; background: currentColor; }
+.kicker-center { justify-content: center; }
+.section-title { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 7vw, 112px); line-height: 0.95; margin-top: 16px; }
+.section-title em, .contact-title em, .hero-role em { font-style: normal; color: var(--yellow); }
+.section-note { max-width: 40ch; color: var(--muted); }
+.sub { font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 48px 0 16px; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags li { font-size: 13px; padding: 5px 12px; border: 1.5px solid var(--line); border-radius: 999px; }
+
+/* Media frames + placeholder art */
+.project-media, .ill-frame, .frame, .portrait, .lb-media, .cs-next-media {
+  position: relative; overflow: hidden; border-radius: var(--radius); background: #1a1a18;
+}
+.project-media > *, .ill-frame > *, .frame > *, .portrait > *, .lb-media > *, .cs-next-media > * {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.art { position: relative; }
+.art svg { width: 100%; height: 100%; }
+.art::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.16; mix-blend-mode: multiply;
+}
+
+/* ---------- Hero: the falling scene ---------- */
+
+/* The section is tall; .fall-sticky stays pinned while you scroll through it,
+   and site.js moves the character down as you go. */
+.fall { position: relative; height: 270vh; }
+.fall-sticky { position: sticky; top: 76px; height: calc(100svh - 76px); overflow: hidden; }
+.fall-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; height: 100%; }
+
+/* Stars: three layers that site.js slides up at different speeds as she falls. */
+.fall-stars { position: absolute; inset: 0; pointer-events: none; animation: stars-in 1.6s ease-out both; }
+.star-layer { position: absolute; left: 0; top: 0; width: 100%; will-change: transform; }
+.st, .st-spark { position: absolute; width: var(--d); height: var(--d); }
+.st { border-radius: 50%; background: var(--fill); animation: star-twinkle 3.6s ease-in-out var(--t) infinite; }
+.st-spark svg { display: block; width: 100%; height: 100%; fill: var(--fill); animation: twinkle 3s ease-in-out var(--t) infinite; }
+@keyframes star-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+@keyframes stars-in { from { opacity: 0; } }
+
+/* "Scroll" hint at the bottom of the first screen: fades up once the intro has played, gone once you scroll. */
+.scroll-hint {
+  position: absolute; left: 50%; bottom: clamp(16px, 3.5vh, 36px); z-index: 2; transform: translateX(-50%);
+  pointer-events: none; transition: opacity 0.4s, transform 0.4s var(--ease);
+}
+.scroll-hint.gone { opacity: 0; transform: translate(-50%, 10px); }
+.scroll-hint-in {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-family: var(--display); font-weight: 500; font-size: 15px; letter-spacing: 0.04em; color: var(--cream);
+  animation: hint-in 0.7s var(--bounce) 2.4s both;
+}
+.mouse { position: relative; width: 24px; height: 38px; border: 2px solid var(--cream); border-radius: 13px; }
+.mouse i { position: absolute; left: 50%; top: 7px; width: 5px; height: 8px; margin-left: -2.5px; border-radius: 3px; background: var(--yellow); animation: wheel 1.6s ease-in-out infinite; }
+@keyframes hint-in { from { opacity: 0; transform: translateY(12px); } }
+@keyframes wheel { 0% { transform: none; opacity: 1; } 70% { transform: translateY(13px); opacity: 0; } 71%, 100% { transform: none; opacity: 0; } }
+
+.status {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 16px 8px 12px; font-size: 14px;
+  border: 1.5px solid var(--line); border-radius: 999px;
+}
+.pulse { width: 9px; height: 9px; flex: none; border-radius: 50%; background: var(--yellow); animation: pulse 2.2s infinite; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 224, 84, 0.55); }
+  70%, 100% { box-shadow: 0 0 0 9px rgba(239, 224, 84, 0); }
+}
+
+.hero-name {
+  display: flex; flex-wrap: wrap; justify-content: center; column-gap: 0.28em; margin-top: clamp(12px, 3vh, 36px);
+  font-family: var(--display); font-weight: 700; font-size: clamp(48px, 6vw, 112px); line-height: 0.9; text-align: center;
+}
+.hero-name .word { display: inline-flex; }
+.hero-name .drop { display: inline-block; transform-origin: 50% 100%; }
+
+/* Everything that used to sit beside the fall now comes right after it. */
+.hero-after { padding-top: clamp(56px, 8vw, 104px); }
+.hero-role { margin-top: 22px; font-family: var(--display); font-weight: 700; font-size: clamp(36px, 5vw, 76px); line-height: 1; }
+.hero-intro { max-width: 52ch; margin-top: 20px; color: var(--muted); font-size: 18px; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 32px 0 clamp(48px, 6vw, 72px); }
+
+/* The fall area is a size container, so the character scales with the space left under the name. */
+.fall-area { position: relative; flex: 1; min-height: 0; width: min(100%, 980px); container-type: size; }
+.ground {
+  position: absolute; left: 12%; right: 12%; bottom: 3%; height: 23%; color: var(--yellow);
+  opacity: 0; transform: translateY(30%) scale(0.7); transform-origin: 50% 100%;
+  transition: transform 0.6s var(--bounce), opacity 0.25s;
+}
+.ground.in { opacity: 1; transform: none; }
+.fall-icons { position: absolute; inset: 0; pointer-events: none; }
+/* Stickers pop out behind her, then sit in front once she's landed so they're never covered. */
+.fall-area.landed .fall-icons { z-index: 3; }
+
+.char {
+  /* Her pose images have empty space above the head, so she can be a little taller than the area. */
+  --cw: min(72cqh, 64cqw);
+  position: absolute; top: 0; left: calc(50% - var(--cw) / 2); z-index: 2;
+  width: var(--cw); aspect-ratio: 1352 / 2000;
+  border: 0; padding: 0; background: none; border-radius: 40px; cursor: default; will-change: transform;
+}
+.char.is-landed { cursor: pointer; }
+.char-tilt { position: absolute; inset: 0; transform-origin: 50% 92%; transition: transform 0.5s var(--bounce); }
+.char.is-landed:hover .char-tilt { transform: rotate(-3deg) translateY(-2%); }
+.char-body { position: absolute; inset: 0; transform-origin: 50% 92%; }
+.char-body img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; visibility: hidden; user-select: none; -webkit-user-drag: none; }
+.char-body img.on { visibility: visible; }
+.char-shadow { position: absolute; left: 22%; right: 22%; bottom: 5%; height: 4.5%; border-radius: 50%; background: rgba(11, 11, 10, 0.28); opacity: 0; }
+
+.click-me { position: absolute; top: 62%; right: -18%; width: 30%; pointer-events: none; transition: opacity 0.4s, transform 0.4s var(--bounce); }
+.char:not(.is-landed) .click-me, .click-me.is-done { opacity: 0; transform: scale(0.6) rotate(-20deg); }
+.cm-bg { fill: var(--lilac); }
+.cm-ring { transform-origin: 60px 60px; animation: spin 14s linear infinite; }
+.cm-ring text { font-family: var(--display); font-weight: 700; font-size: 13px; fill: var(--black); }
+.cm-arrow { fill: none; stroke: var(--black); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Stickers start tucked behind the character and pop out to their side when she passes. */
+.sticker {
+  position: absolute; z-index: 1; isolation: isolate;
+  display: inline-flex; align-items: center; gap: 12px; padding: 22px 34px;
+  color: var(--black); font-family: var(--display); font-weight: 700; font-size: clamp(20px, 1.9vw, 30px); white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transform: translateX(var(--from)) scale(0.2) rotate(var(--spin));
+  transition: transform 0.7s var(--bounce), opacity 0.25s;
+}
+.sticker-left { left: 0; --from: 75%; --rot: -4deg; --spin: 25deg; }
+.sticker-right { right: 0; --from: -75%; --rot: 3deg; --spin: -25deg; }
+.sticker.in { opacity: 1; pointer-events: auto; transform: rotate(var(--rot)); }
+.sticker.in:hover { transform: rotate(0deg) scale(1.08); }
+.sticker > .blob { position: absolute; inset: 0; z-index: -1; color: var(--fill); }
+.sticker-icon svg { width: 1.15em; height: 1.15em; }
+
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; padding-top: 20px; border-top: 1.5px solid var(--line); margin-bottom: clamp(40px, 6vw, 72px); }
+.facts dt, .cs-meta dt, .cd-facts dt { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+.facts dd { font-size: 15.5px; line-height: 1.4; }
+.about-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; margin-bottom: 8px; }
+
+@media (max-width: 960px) {
+  .fall { height: 250vh; }
+  .char { --cw: min(70cqh, 86cqw); }
+  .click-me { right: -3%; width: 26%; } /* she's nearly full width here, so keep the badge on screen */
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .status { font-size: 12.5px; }
+  .hero-name { font-size: 14vw; margin-top: 14px; }
+  .sticker { padding: 14px 20px; gap: 8px; font-size: 18px; }
+  .hero-cta .btn { flex: 1 1 auto; justify-content: center; }
+  .facts { gap: 20px 16px; }
+}
+
+/* ---------- Hello (pinned scroll scene) ---------- */
+
+.hello { position: relative; height: 260vh; }
+.hi-sticky { position: sticky; top: 76px; height: calc(100svh - 76px); overflow: hidden; display: grid; place-items: center; }
+.hi-inner { position: relative; width: 100%; padding-inline: var(--gutter); text-align: center; transform-origin: 50% 40%; will-change: transform, opacity; }
+.hi-line { font-family: var(--display); font-weight: 700; font-size: clamp(60px, 11vw, 210px); line-height: 0.95; text-transform: uppercase; }
+.hi-word { display: inline-block; white-space: nowrap; }
+.hi-ch { display: inline-block; will-change: transform; }
+.hi-squig { display: block; width: clamp(150px, 20vw, 320px); margin: clamp(10px, 2vh, 24px) auto 0; overflow: visible; }
+.hi-squig path { fill: none; stroke: var(--yellow); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.hi-cap { max-width: 54ch; margin: clamp(18px, 3vh, 36px) auto 0; font-family: var(--display); font-weight: 500; font-size: clamp(17px, 1.5vw, 24px); line-height: 1.4; }
+.hi-cap p + p { margin-top: 0.8em; }
+.hi-sparks { position: absolute; inset: -12vh 0; pointer-events: none; }
+.hi-spark { position: absolute; width: calc(clamp(20px, 2.6vw, 42px) * var(--s)); transform: scale(0); }
+.hi-spark svg { display: block; width: 100%; fill: var(--fill); animation: twinkle 2.8s ease-in-out infinite; }
+.hi-spark:nth-child(2n) svg { animation-delay: -1.2s; }
+@keyframes twinkle { 50% { transform: rotate(25deg) scale(0.72); } }
+
+@media (max-width: 760px) {
+  .hello { height: 240vh; }
+  .hi-line { font-size: 15vw; }
+  .hi-sparks { inset: -26vh 0; }
+  .hi-spark:nth-child(3), .hi-spark:nth-child(4) { display: none; } /* would sit on the bio text */
+}
+
+/* ---------- Rooted in Egypt (pinned scroll scene) ---------- */
+
+.egypt { position: relative; height: 340vh; }
+.eg-sticky { position: sticky; top: 76px; height: calc(100svh - 76px); overflow: hidden; }
+
+/* The scene keeps the 2000 × 1126 proportions of the artwork. Layer positions below are
+   percentages of that canvas, matched to the full illustration. */
+.eg-scene { position: absolute; left: 0; bottom: 0; height: max(56.3vw, min(60svh, 125vw)); aspect-ratio: 2000 / 1126; will-change: transform; }
+.eg-layer { position: absolute; display: block; height: auto; max-width: none; user-select: none; pointer-events: none; will-change: transform; }
+.eg-sun { left: 75.35%; top: 50.44%; width: 24.2%; z-index: 0; }
+.eg-skyline { left: 54.25%; top: 30.28%; width: 52%; z-index: 1; }
+/* The road is 30% wider than the scene so it can slide sideways without its edges showing. */
+.eg-ground { left: -15%; top: 16.87%; width: 130%; height: 100%; background-size: 100% 100%; background-repeat: no-repeat; z-index: 2; }
+.eg-palms { left: -13.15%; top: 28.86%; width: 57%; z-index: 3; }
+
+.eg-bike { position: absolute; left: 25.45%; top: 55.95%; width: 34.5%; aspect-ratio: 2000 / 1126; z-index: 4; will-change: transform; }
+.eg-bike img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; user-select: none; }
+.eg-wheel { position: absolute; width: 22.2%; height: auto; aspect-ratio: 1; overflow: visible; }
+.eg-wheel-back { left: 19.5%; top: 65.3%; }
+.eg-wheel-front { left: 63%; top: 65.7%; }
+.eg-wheel circle { fill: none; }
+.eg-wheel .w-tyre { stroke: var(--black); stroke-width: 10; }
+.eg-wheel .w-band { stroke: var(--cream); stroke-width: 11; }
+.eg-wheel .w-rim { stroke: var(--black); stroke-width: 4; }
+.eg-wheel .w-spokes { stroke: var(--cream); stroke-width: 2.4; stroke-linecap: round; }
+.eg-wheel .w-hub { fill: var(--cream); }
+.eg-wheel .w-hub-in { fill: var(--black); }
+
+.eg-copy { position: absolute; left: 0; right: 0; top: clamp(12px, 7%, 96px); z-index: 5; padding-inline: var(--gutter); text-align: center; }
+.eg-title { font-family: var(--display); font-weight: 700; font-size: clamp(60px, 10.5vw, 200px); line-height: 0.95; }
+.eg-line { display: block; white-space: nowrap; }
+.eg-l { display: inline-block; }
+.eg-sp { width: 0.3em; }
+.eg-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: clamp(16px, 2.6vh, 32px); }
+.eg-cap { max-width: 46ch; margin: clamp(14px, 2.2vh, 28px) auto 0; font-family: var(--display); font-weight: 500; font-size: clamp(16px, 1.45vw, 26px); line-height: 1.35; }
+
+@media (max-width: 760px) {
+  .egypt { height: 320vh; }
+  .eg-title { font-size: 13vw; }
+}
+
+/* ---------- Clients marquee ---------- */
+
+.marquee { overflow: hidden; border-block: 1.5px solid var(--line); padding: 22px 0; white-space: nowrap; }
+.marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+.marquee-group { display: flex; align-items: center; gap: 40px; padding-right: 40px; }
+.marquee span { font-family: var(--display); font-weight: 500; font-size: clamp(26px, 3vw, 42px); }
+.marquee i { font-family: var(--display); font-style: normal; font-weight: 700; font-size: 40px; color: var(--yellow); }
+.client-logo { flex: none; width: auto; height: var(--h); }
+@media (max-width: 600px) { .client-logo { height: calc(var(--h) * 0.72); } }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ---------- Work: blobby project blocks ---------- */
+
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter {
+  height: 42px; padding: 0 18px; border: 1.5px solid var(--line); border-radius: 999px; background: none;
+  font-family: var(--display); font-weight: 500; font-size: 16px; transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.filter sup { font-family: var(--sans); font-size: 10px; margin-left: 4px; opacity: 0.6; }
+.filter:hover { border-color: var(--cream); }
+.filter[aria-pressed="true"] { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+
+.projects { display: flex; flex-direction: column; gap: clamp(16px, 2.5vw, 36px); }
+
+.project {
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: 1fr 1.05fr; align-items: center; gap: clamp(24px, 4vw, 64px);
+  padding: clamp(44px, 5.5vw, 88px) clamp(32px, 6vw, 104px);
+  color: var(--black);
+  transition: transform 0.6s var(--bounce);
+}
+.project > .blob { position: absolute; inset: 0; z-index: -1; color: var(--fill); }
+.project:hover { transform: rotate(-0.7deg) scale(1.012); }
+.project:nth-child(even):hover { transform: rotate(0.7deg) scale(1.012); }
+.project:nth-child(even) .project-media { order: -1; }
+
+.project-num { display: flex; align-items: baseline; gap: 10px; font-size: 14px; color: var(--ink-muted); }
+.project-num span { font-family: var(--display); font-weight: 700; font-size: 24px; color: var(--black); }
+.project h3 { margin-top: 10px; font-family: var(--display); font-weight: 700; font-size: clamp(46px, 6vw, 96px); line-height: 0.92; }
+.project-summary { max-width: 44ch; margin-top: 18px; color: var(--ink-muted); }
+.project .tags { margin-top: 18px; }
+.project .tags li { border-color: var(--ink-line); }
+.project-link {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 28px;
+  height: 50px; padding: 0 24px; border-radius: 999px; background: var(--black); color: var(--cream);
+  font-family: var(--display); font-weight: 500; font-size: 18px;
+}
+.project:hover .project-link .arrow { transform: translateX(4px); }
+
+.project-media { aspect-ratio: 4 / 3; border-radius: 0; transform: rotate(2.5deg); transition: transform 0.6s var(--bounce); }
+/* The image is cut into a blob in site.js (clip-path); this traces its edge. Half the stroke is clipped away. */
+[data-clip] > .clip-line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.clip-line path { fill: none; stroke: var(--black); stroke-width: 6; vector-effect: non-scaling-stroke; }
+.project:nth-child(even) .project-media { transform: rotate(-2.5deg); }
+.project:hover .project-media { transform: rotate(0deg) scale(1.03); }
+
+@media (max-width: 860px) {
+  .project { grid-template-columns: 1fr; padding: 44px 30px 48px; }
+  .project .project-media, .project:nth-child(even) .project-media { order: -1; }
+}
+
+/* ---------- Illustration ---------- */
+
+.ill-grid { columns: 3 280px; column-gap: 20px; }
+.ill { position: relative; display: block; width: 100%; margin-bottom: 20px; border: 0; padding: 0; background: none; text-align: left; break-inside: avoid; }
+.ill-frame { display: block; aspect-ratio: var(--ar); transition: transform 0.5s var(--bounce); }
+.ill:hover .ill-frame { transform: rotate(-1.2deg) scale(1.02); }
+.ill:nth-child(even):hover .ill-frame { transform: rotate(1.2deg) scale(1.02); }
+.ill-cap {
+  position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px);
+  padding: 7px 14px; border-radius: 999px; background: var(--cream); color: var(--black);
+  font-family: var(--display); font-weight: 500; font-size: 15px;
+  opacity: 0; transform: translateY(6px); transition: opacity 0.3s, transform 0.3s var(--ease);
+}
+.ill-cap em { font-family: var(--sans); font-style: normal; font-size: 13px; color: var(--ink-muted); margin-left: 4px; }
+.ill:hover .ill-cap, .ill:focus-visible .ill-cap { opacity: 1; transform: none; }
+@media (hover: none) { .ill-cap { opacity: 1; transform: none; } }
+
+.lightbox { margin: auto; border: 0; padding: 0; background: transparent; color: var(--cream); overflow: visible; max-width: none; max-height: none; }
+.lightbox::backdrop { background: rgba(11, 11, 10, 0.92); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.lightbox figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.lb-media { aspect-ratio: var(--ar); }
+.lightbox figcaption { font-family: var(--display); font-size: 18px; }
+.lightbox figcaption span { font-family: var(--sans); font-size: 14px; color: var(--muted); margin-left: 6px; }
+.lb-btn {
+  position: fixed; width: 50px; height: 50px; border-radius: 50%;
+  border: 2px solid var(--line); background: var(--black); color: var(--cream); font-size: 18px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.lb-btn:hover { background: var(--yellow); border-color: var(--yellow); color: var(--black); }
+.lb-close { top: 20px; right: 20px; }
+.lb-prev { left: 20px; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 20px; top: 50%; transform: translateY(-50%); }
+@media (max-width: 640px) { .lb-prev, .lb-next { top: auto; bottom: 20px; transform: none; } }
+
+/* ---------- For creative directors (lilac block) ---------- */
+
+.cd { position: relative; isolation: isolate; color: var(--black); margin-inline: clamp(6px, 1.2vw, 18px); }
+.cd > .blob { position: absolute; inset: 0; z-index: -1; color: var(--lilac); }
+.cd .kicker, .cd .sub { color: var(--ink-muted); }
+
+.services {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; margin-top: clamp(40px, 5vw, 72px);
+  background: var(--black); border: 2px solid var(--black); border-radius: var(--radius); overflow: hidden;
+}
+.service { display: flex; flex-direction: column; gap: 14px; min-height: 280px; padding: 30px 28px 34px; background: var(--lilac); transition: background 0.3s; }
+.service:hover { background: var(--yellow); }
+.service .num { font-family: var(--display); font-weight: 700; font-size: 24px; }
+.service h3 { margin-top: auto; font-family: var(--display); font-weight: 700; font-size: clamp(28px, 2.4vw, 36px); line-height: 1; }
+.service p { color: var(--ink-muted); font-size: 15.5px; }
+
+.cd-bottom { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; margin-top: 16px; }
+.cd-facts > div { display: grid; grid-template-columns: 200px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1.5px solid var(--ink-line); }
+.cd-facts > div:first-child { border-top: 1.5px solid var(--ink-line); }
+.cd-facts dt { color: var(--ink-muted); margin: 3px 0 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li { padding: 8px 14px; border: 1.5px solid var(--black); border-radius: 999px; font-size: 14px; }
+
+.quote { margin-top: 48px; padding: clamp(28px, 3vw, 40px); border-radius: var(--radius); background: var(--black); color: var(--cream); }
+.quote blockquote { font-family: var(--display); font-weight: 500; font-size: clamp(19px, 1.6vw, 23px); line-height: 1.3; }
+.quote figcaption { display: flex; flex-direction: column; margin-top: 24px; font-size: 15px; }
+.quote figcaption span { color: var(--muted); }
+.quote.is-placeholder { background: transparent; border: 2px dashed var(--black); color: var(--ink-muted); }
+.quote.is-placeholder figcaption span { color: var(--ink-muted); }
+
+@media (max-width: 1100px) { .services { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .cd-bottom { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .services { grid-template-columns: 1fr; }
+  .service { min-height: 0; }
+  .service h3 { margin-top: 8px; }
+  .cd-facts > div { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* ---------- About ---------- */
+
+/* Intro: "Hi there!" bubble, the big name, the bio, and the character on a lilac blob. */
+.about-hi { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+.about-bubble {
+  position: relative; display: inline-block; margin-top: 24px; padding: 12px 22px; border-radius: 22px;
+  background: var(--yellow); color: var(--black); font-family: var(--display); font-weight: 700; font-size: clamp(18px, 1.6vw, 22px);
+  transform: rotate(-3deg);
+}
+.about-bubble::after { content: ""; position: absolute; left: 30px; bottom: -13px; border-style: solid; border-width: 14px 9px 0; border-color: var(--yellow) transparent transparent; }
+.about-title { margin-top: 22px; font-family: var(--display); font-weight: 700; font-size: clamp(54px, 7.4vw, 124px); line-height: 0.95; }
+.about-title em { font-style: normal; color: var(--yellow); }
+.bio { margin-top: 28px; }
+.bio p { color: var(--muted); max-width: 54ch; margin-top: 16px; font-size: clamp(16px, 1.25vw, 18px); }
+.bio p:first-child { color: var(--cream); margin-top: 0; }
+.about-hi-art { position: relative; isolation: isolate; aspect-ratio: 4 / 5; display: grid; place-items: center; }
+.about-hi-art > .blob { position: absolute; inset: 0; z-index: -1; color: var(--fill); }
+.about-hi-art > img { width: 64%; height: auto; }
+.about-photo { position: relative; width: 84%; aspect-ratio: 3 / 4; transform: rotate(-3deg); }
+.about-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; transform: scale(1.12); transform-origin: 50% 48%; } /* a little zoom hides the fisheye's dark ring */
+
+/* The road she cycles along as you scroll (site.js rideScene()). The section is tall; the stage stays pinned. */
+.ride { position: relative; height: 420vh; }
+.ride-sticky { position: sticky; top: 76px; height: calc(100svh - 76px); display: flex; flex-direction: column; justify-content: center; gap: clamp(10px, 2.4vh, 28px); overflow: hidden; }
+.ride-head { width: 100%; display: flex; align-items: baseline; justify-content: space-between; gap: 6px 24px; flex-wrap: wrap; }
+.ride-title { font-family: var(--display); font-weight: 700; font-size: clamp(36px, 4.4vw, 72px); line-height: 1; }
+.ride-note { color: var(--muted); }
+.ride-stage {
+  position: relative; aspect-ratio: var(--ar); margin-inline: auto;
+  width: min(calc(100% - 2 * var(--gutter)), calc((100svh - 76px - 150px) * var(--arw)), 1180px);
+}
+.ride-road { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ride-road path { fill: none; stroke-linecap: round; }
+.road-base { stroke: var(--lilac); stroke-width: 58; }
+.road-done { stroke: var(--yellow); stroke-width: 58; }
+.road-dash { stroke: var(--black); stroke-width: 3.5; stroke-dasharray: 18 14; }
+.road-stop { fill: var(--cream); stroke: var(--black); stroke-width: 4; transition: fill 0.3s; }
+.road-stop.on { fill: var(--yellow); }
+.ride-stops { position: absolute; inset: 0; pointer-events: none; }
+.ride-stop { position: absolute; width: var(--stop-w, 27%); text-align: center; opacity: 0; transform: translate(-50%, 12px); transition: opacity 0.4s, transform 0.55s var(--bounce); }
+.ride-stop.on { opacity: 1; transform: translate(-50%, 0); }
+.ride-stop b, .ride-now-item b { display: block; font-family: var(--display); font-weight: 700; font-size: clamp(18px, 1.7vw, 26px); line-height: 1.1; color: var(--yellow); }
+.ride-stop strong, .ride-now-item strong { display: block; margin-top: 3px; font-size: clamp(12.5px, 1vw, 15px); font-weight: 600; }
+.ride-stop span, .ride-now-item span { display: block; margin-top: 4px; font-size: clamp(11.5px, 0.9vw, 13.5px); line-height: 1.4; color: var(--muted); }
+.ride-bike { position: absolute; left: 0; top: 0; z-index: 2; width: 16%; will-change: transform; }
+.ride-bike-in { position: relative; aspect-ratio: 2000 / 1126; }
+.ride-bike-in img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; user-select: none; }
+.ride-now { display: none; }
+
+/* Facts, education and the CV after the ride. */
+.about-more { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); padding-block: clamp(40px, 6vw, 88px) clamp(72px, 9vw, 128px); }
+.about-more .sub { margin-top: 0; }
+.about-more .timeline + .sub { margin-top: 40px; }
+.about-more .btn { margin-top: 32px; }
+
+.timeline { border-top: 1.5px solid var(--line); margin-bottom: 8px; }
+.timeline li { display: grid; grid-template-columns: 150px 1fr auto; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1.5px solid var(--line); }
+.timeline span { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.timeline strong { font-weight: 600; }
+.timeline em { font-style: normal; color: var(--muted); text-align: right; }
+
+@media (max-width: 900px) {
+  /* On smaller screens the road is a mini-map: the current stop's year and lesson show underneath instead. */
+  .ride { height: 380vh; }
+  .ride-stops { display: none; }
+  .ride-bike { width: 18%; }
+  .ride-now { display: grid; min-height: 8.5em; }
+  .ride-now-item { grid-area: 1 / 1; opacity: 0; transform: translateY(10px); transition: opacity 0.35s, transform 0.45s var(--bounce); }
+  .ride-now-item.current { opacity: 1; transform: none; }
+  .ride-now-item b { font-size: 24px; }
+  .ride-now-item strong { font-size: 16px; }
+  .ride-now-item span { font-size: 15px; }
+}
+@media (max-width: 860px) {
+  .about-hi, .about-more { grid-template-columns: 1fr; }
+  .about-hi-art { max-width: 380px; width: 100%; }
+}
+@media (max-width: 560px) {
+  .timeline li { grid-template-columns: 1fr; gap: 2px; }
+  .timeline em { text-align: left; }
+}
+
+/* ---------- Contact ---------- */
+
+.contact { text-align: center; padding-block: clamp(96px, 14vw, 190px); }
+.contact-title { max-width: 13ch; margin: 22px auto 0; font-family: var(--display); font-weight: 700; font-size: clamp(48px, 8vw, 128px); line-height: 0.95; }
+.contact-note { max-width: 46ch; margin: 28px auto 0; color: var(--muted); font-size: 18px; }
+.email-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; margin-top: 40px; }
+.email {
+  font-family: var(--display); font-weight: 500; font-size: clamp(26px, 3.6vw, 48px); overflow-wrap: anywhere;
+  background: linear-gradient(var(--yellow), var(--yellow)) 0 100% / 100% 4px no-repeat; padding-bottom: 6px;
+  transition: color 0.2s;
+}
+.email:hover { color: var(--yellow); }
+.copy { height: 38px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--line); background: none; font-size: 13px; }
+.copy:hover { border-color: var(--cream); }
+.socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; margin-top: 48px; font-size: 15px; }
+.socials a:hover { color: var(--yellow); }
+
+/* ---------- Footer ---------- */
+
+.footer { border-top: 1.5px solid var(--line); }
+.footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-block: 28px; font-size: 14px; color: var(--muted); }
+.footer a:hover { color: var(--cream); }
+
+/* ---------- Case study ---------- */
+
+.cs-head { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(40px, 5vw, 64px); }
+.back { display: inline-block; margin-bottom: 36px; font-size: 15px; color: var(--muted); transition: color 0.2s; }
+.back:hover { color: var(--yellow); }
+.cs-title { margin-top: 22px; font-family: var(--display); font-weight: 700; font-size: clamp(60px, 11vw, 180px); line-height: 0.9; }
+.cs-lead { max-width: 30ch; margin-top: 28px; font-family: var(--display); font-weight: 500; font-size: clamp(24px, 2.5vw, 36px); line-height: 1.2; }
+.cs-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 24px; margin-top: clamp(40px, 5vw, 64px); padding-top: 20px; border-top: 1.5px solid var(--line); }
+.cs-meta dd { font-size: 15.5px; line-height: 1.4; }
+.cs-behance { margin-top: 28px; }
+
+.cs-cover .frame, .cs-gallery .frame { aspect-ratio: var(--ar); }
+
+.cs-section { display: grid; grid-template-columns: 4fr 8fr; gap: 40px; padding-block: clamp(56px, 8vw, 120px); }
+.cs-section h2 { font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); padding-top: 8px; }
+.cs-body p { max-width: 60ch; font-size: clamp(19px, 1.6vw, 23px); line-height: 1.5; }
+.cs-body p + p { margin-top: 1em; }
+
+.cs-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px, 1.6vw, 24px); }
+.cs-gallery .full { grid-column: 1 / -1; }
+.cs-gallery figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.stat { padding-top: 20px; border-top: 2px solid var(--cream); }
+.stat strong { display: block; font-family: var(--display); font-weight: 700; font-size: clamp(48px, 5.4vw, 84px); line-height: 1; color: var(--yellow); }
+.stat span { display: block; margin-top: 12px; color: var(--muted); font-size: 15.5px; max-width: 24ch; }
+
+.cs-next {
+  position: relative; isolation: isolate;
+  display: grid; grid-template-columns: 1fr minmax(200px, 340px); align-items: center; gap: 40px;
+  margin-block: clamp(24px, 4vw, 56px) clamp(56px, 8vw, 110px);
+  padding: clamp(44px, 5vw, 80px) clamp(32px, 6vw, 96px);
+  color: var(--black); transition: transform 0.6s var(--bounce);
+}
+.cs-next > .blob { position: absolute; inset: 0; z-index: -1; color: var(--fill); }
+.cs-next .kicker { color: var(--ink-muted); }
+.cs-next:hover { transform: rotate(-0.7deg) scale(1.01); }
+.cs-next-title { margin-top: 14px; display: flex; align-items: center; gap: 0.25em; font-family: var(--display); font-weight: 700; font-size: clamp(44px, 7vw, 110px); line-height: 0.95; }
+.cs-next-title .arrow { width: 0.55em; height: 0.55em; }
+.cs-next:hover .cs-next-title .arrow { transform: translateX(10px); }
+.cs-next-media { aspect-ratio: 4 / 3; border: 3px solid var(--black); transform: rotate(3deg); transition: transform 0.6s var(--bounce); }
+.cs-next:hover .cs-next-media { transform: rotate(0deg) scale(1.03); }
+
+.notfound { min-height: 60vh; }
+.notfound .btn { margin-top: 32px; }
+
+@media (max-width: 860px) {
+  .cs-section { grid-template-columns: 1fr; gap: 16px; }
+  .stats { grid-template-columns: 1fr; }
+  .cs-next { grid-template-columns: 1fr; }
+  .cs-next-media { max-width: 340px; }
+}
+@media (max-width: 560px) { .cs-gallery { grid-template-columns: 1fr; } }
+
+/* ---------- Rocket cursor ---------- */
+
+html.has-rocket, html.has-rocket * { cursor: none !important; }
+/* The lightbox sits above everything, including the rocket, so use the normal cursor there. */
+html.has-rocket dialog[open], html.has-rocket dialog[open] * { cursor: auto !important; }
+
+.cursor { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+.cursor.visible { opacity: 1; }
+/* Positioned so the rocket's nose tip (99.1%, 8.2% of the image) sits on the pointer, and turns around it. */
+.rocket-turn { position: absolute; left: -63.4px; top: -3.9px; width: 64px; transform-origin: 99.1% 8.2%; will-change: transform; }
+.rocket { display: block; width: 100%; height: auto; max-width: none; transform-origin: 99.1% 8.2%; transition: transform 0.35s var(--bounce); }
+.cursor.hover .rocket { transform: scale(1.25); }
+.cursor.boost .rocket { transform: scale(0.85); }
+
+.cursor-label {
+  position: absolute; left: 14px; top: 14px; width: 88px; height: 88px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--yellow); color: var(--black);
+  font-family: var(--display); font-weight: 700; font-size: 18px;
+  transform: scale(0) rotate(-20deg); transform-origin: 0 0; transition: transform 0.4s var(--bounce);
+}
+.cursor.on .cursor-label { transform: scale(1) rotate(0deg); }
+
+/* ---------- Reveal on scroll ---------- */
+
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s var(--ease), transform 0.8s var(--bounce); }
+.reveal.in { opacity: 1; transform: none; }
+.project.reveal.in { transition: opacity 0.8s var(--ease), transform 0.6s var(--bounce); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .marquee-track, .cm-ring, .pulse { animation: none; }
+  /* No scroll-driven fall: show her landed with the stickers out. */
+  .fall { height: auto; }
+  .fall-sticky { position: relative; top: 0; }
+  .egypt { height: auto; }
+  .eg-sticky { position: relative; top: 0; }
+  .hello { height: auto; }
+  .hi-sticky { position: relative; top: 0; }
+  .hi-spark svg { animation: none; }
+  .fall-stars, .st, .st-spark svg { animation: none; }
+  .scroll-hint { display: none; }
+  /* The road shows fully ridden, with every stop out. */
+  .ride { height: auto; }
+  .ride-sticky { position: relative; top: 0; height: auto; padding-block: 48px; }
+  .ride-stop, .road-stop { transition: none; }
+  .ride-now { gap: 20px; }
+  .ride-now-item { grid-area: auto; opacity: 1; transform: none; }
+  .rocket, .cursor-label { transition: none; }
+}
